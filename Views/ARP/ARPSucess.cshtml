@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Sucesso!";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="text-center">
+                <h1 class="display-4 text-success">Sucesso!</h1>
+                <p>A ata de registro de preço foi publicada com sucesso!</p>
+                <img src="~/images/logo-pncp.png" style="width:350px" class="m-3" />
+                <a class="nav-link" asp-area="" asp-controller="ARP" asp-action="InserirAtaRegistroPreco">Publicar outra ARP</a>
+            </div>
+            <a class="nav-link btn btn-info text-light" target="_blank" href="@ViewBag.UrlPNCP">Acesse a pagina no PNCP</a>
+        </div>
+    </div>
+</div>

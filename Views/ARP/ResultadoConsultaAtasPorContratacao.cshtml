@@ -1,0 +1,47 @@
+﻿@model PublicadorARP.Models.ViewModels.ContratacaoViewModel
+
+@{
+    ViewData["Title"] = "Consultar ARPs";
+}
+
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="text-center">
+                <h1 class="display-4">Contratação @Model.NumeroCompra / @Model.AnoCompra</h1>
+                <p>Atas de registro de preço publicadas @Model.NumeroControlePNCP</p>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Sequencial</th>
+                        <th>Número Ata</th>
+                        <th>Data de Assinatura</th>
+                        <th>Data de Vigência (Início)</th>
+                        <th>Data de Vigência (Fim)</th>
+                        <th>Data de Publicação</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ata in Model.AtasRegistroPrecoList)
+                    {
+                        <tr>
+                            <td>@ata.SequencialAta</td>
+                            <td>@ata.NumeroAtaRegistroPreco/@ata.AnoAta</td>
+                            <td>@ata.DataAssinatura.ToString("dd/MM/yyyy")</td>
+                            <td>@ata.DataVigenciaInicio.ToString("dd/MM/yyyy")</td>
+                            <td>@ata.DataVigenciaFim.ToString("dd/MM/yyyy")</td>
+                            <td>@ata.DataPublicacaoPncp.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <a type="button" class="btn btn-info btn-square" asp-area="" asp-controller="ARP" asp-action="GerenciarAtaRegistroPreco" asp-route-sequencialAta="@ata.SequencialAta" asp-route-sequencialCompra="@Model.SequencialCompra" asp-route-anoCompra="@Model.AnoCompra"><i class="bi bi-info-circle"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

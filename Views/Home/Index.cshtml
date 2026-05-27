@@ -1,0 +1,53 @@
+﻿@model WebApp.Models.Dtos.InserirAtaRegistroPrecoDto
+@{
+    ViewData["Title"] = "Inserir ARP";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="text-center">
+                <h1 class="display-4">Inserir Ata de Registro de Preço</h1>
+                <p>Preencha as informações</p>
+            </div>
+
+            <form asp-controller="ARP" asp-action="InserirAtaRegistroPreco" method="post" enctype="multipart/form-data">
+                <div class="row mb-3 d-flex flex-wrap">
+                    <div class="form-group col-6">
+                        <label asp-for="idPNCP"></label>
+                        <input asp-for="idPNCP" class="form-control" />
+                    </div>
+                    <div class="form-group col-3">
+                        <label asp-for="anoAta"></label>
+                        <input asp-for="anoAta" class="form-control" />
+                    </div>
+                    <div class="form-group col-3">
+                        <label asp-for="numeroAta"></label>
+                        <input asp-for="numeroAta" class="form-control" />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="form-group col-4">
+                        <label asp-for="dataAssinatura"></label>
+                        <input asp-for="dataAssinatura" type="date" class="form-control" />
+                    </div>
+                    <div class="form-group col-4">
+                        <label asp-for="dataInicioVigencia"></label>
+                        <input asp-for="dataInicioVigencia" type="date" class="form-control" />
+                    </div>
+                    <div class="form-group col-4">
+                        <label asp-for="dataFimVigencia"></label>
+                        <input asp-for="dataFimVigencia" type="date" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="arquivo"></label>
+                    <div class="input-group">
+                        <input asp-for="arquivo" type="file" class="form-control" id="inputGroupFile02">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+        </div>
+    </div>
+</div>
