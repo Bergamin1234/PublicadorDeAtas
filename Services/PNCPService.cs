@@ -169,7 +169,7 @@ namespace PublicadorARP.Services
                     dataVigenciaInicio = dto.dataInicioVigencia,
                     dataVigenciaFim = dto.dataFimVigencia,
                     possibilidadeAdesao = dto.PossibilidadeAdesao, // Novo campo v2.4 mapeado da base
-                    partesEnvolvidas = dto.PartesEnvolvidas,        // Nova lista v2.4 mapeada da base
+                    partesEnvolvidas = dto.PartesEnvolvidas ?? new object[] { },       // Nova lista v2.4 mapeada da base
                     codigoUnidade = dto.codigoUnidade               // Campo obrigatório de unidade adicionado
                 };
 
