@@ -169,7 +169,8 @@ namespace PublicadorARP.Services
                     dataVigenciaInicio = dto.dataInicioVigencia,
                     dataVigenciaFim = dto.dataFimVigencia,
                     possibilidadeAdesao = dto.PossibilidadeAdesao, // Novo campo v2.4 mapeado da base
-                    partesEnvolvidas = dto.PartesEnvolvidas         // Nova lista v2.4 mapeada da base
+                    partesEnvolvidas = dto.PartesEnvolvidas,        // Nova lista v2.4 mapeada da base
+                    codigoUnidade = dto.codigoUnidade               // Campo obrigatório de unidade adicionado
                 };
 
                 // ==============
@@ -293,7 +294,7 @@ namespace PublicadorARP.Services
         // ==============
         // Modificação (Método Obsoleto / Estrutura Antiga)
         // Este método realizava o upload isolado do PDF na API antiga. Ele foi mantido no arquivo 
-        // apenas como histórico/legado da estrutura antiga, mas não é mais invocado pelo fluxo principal.
+// apenas como histórico/legado da estrutura antiga, mas não é mais invocado pelo fluxo principal.
         // =============
         private async Task<RestResponse?> UploadFileAsync(string uploadUrl, IFormFile file, string token, string nomeArquivo)
         {

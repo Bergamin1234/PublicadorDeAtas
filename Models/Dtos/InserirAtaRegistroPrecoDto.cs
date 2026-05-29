@@ -33,6 +33,11 @@ namespace WebApp.Models.Dtos
         public object PartesEnvolvidas { get; set; } 
         // --------------------------------------------
 
+        [Display(Name = "Código da Unidade do Órgão")]
+        public string codigoUnidade { get; set; }
+
+        public string UsuarioNome { get; set; } // Campo para armazenar o nome do usuário logado
+
         [Display(Name = "Anexo da ata de registro de preço")]
         public IFormFile arquivo { get; set; }
     }

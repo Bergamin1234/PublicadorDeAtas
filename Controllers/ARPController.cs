@@ -29,6 +29,7 @@ namespace WebApp.Controllers
         {
             _pncpService = pncpService;
         }
+
         [Authorize]
         public IActionResult InserirAtaRegistroPreco()
         {
@@ -43,9 +44,17 @@ namespace WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> InserirAtaRegistroPreco(InserirAtaRegistroPrecoDto dto)
         {
+            // 1. Captura o nome/documento do usuário logado no sistema e injeta no DTO
+            dto.UsuarioNome = User.Identity?.Name ?? "Usuario do Sistema";
+
+            // 2. Avisa ao C# para ignorar a validação da tela para este campo específico
+            ModelState.Remove("UsuarioNome");
+
+            // 3. Valida se existem OUTROS erros nos demais campos
             if (!ModelState.IsValid)
             {
-                return View();
+                // Mantemos o BadRequest por enquanto para caçar qualquer outro erro oculto
+                return BadRequest(ModelState); 
             }
 
             var result = await _pncpService.InserirAtaRegistroPreco(dto);
@@ -94,6 +103,5 @@ namespace WebApp.Controllers
 
             return View("GerenciarAtaRegistroPreco", ataRegistroPrecoViewModel);
         }
-
     }
 }
