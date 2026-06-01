@@ -41,6 +41,9 @@ namespace WebApp.Controllers
             return View();
         }
 
+        // =========================================================================
+        // MÉTODO REFATORADO E COMPLETAMENTE BLINDADO CONTRA ERROS DE TELA BRANCA
+        // =========================================================================
         [HttpPost]
         public async Task<IActionResult> InserirAtaRegistroPreco(InserirAtaRegistroPrecoDto dto)
         {
@@ -50,11 +53,16 @@ namespace WebApp.Controllers
             // 2. Avisa ao C# para ignorar a validação da tela para este campo específico
             ModelState.Remove("UsuarioNome");
 
-            // 3. Valida se existem OUTROS erros nos demais campos
+            // 3. TRAVA DE SEGURANÇA LOCAL: Impede o envio sem o PDF anexado
+            if (dto.arquivo == null || dto.arquivo.Length == 0)
+            {
+                ModelState.AddModelError("arquivo", "O arquivo PDF da Ata de Registro de Preço é obrigatório.");
+            }
+
+            // 4. Valida se existem erros nos campos
             if (!ModelState.IsValid)
             {
-                // Mantemos o BadRequest por enquanto para caçar qualquer outro erro oculto
-                return BadRequest(ModelState); 
+                return View(dto); 
             }
 
             var result = await _pncpService.InserirAtaRegistroPreco(dto);
@@ -70,7 +78,8 @@ namespace WebApp.Controllers
             }
             else
             {
-                return View("ARPFail");
+                string erroDetalhado = result.Item1.Content ?? "Nenhum conteúdo de erro retornado pela API.";
+                return Content($"Falha na API do PNCP (Status: {result.Item1.StatusCode}). Detalhes do Erro: {erroDetalhado}");
             }
         }
 

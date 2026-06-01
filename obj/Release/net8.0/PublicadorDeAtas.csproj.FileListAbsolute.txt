@@ -288,3 +288,4 @@ C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-develop
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.pdb
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.genruntimeconfig.cache
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\ref\PublicadorDeAtas.dll
+C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.sourcelink.json
