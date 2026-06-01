@@ -12,40 +12,72 @@
             </div>
 
             <form asp-controller="ARP" asp-action="InserirAtaRegistroPreco" method="post" enctype="multipart/form-data">
+                
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
                 <div class="row mb-3 d-flex flex-wrap">
                     <div class="form-group col-6">                        
                         <label asp-for="idPNCP"></label>
-                        <input asp-for="idPNCP" class="form-control" />
+                        <input asp-for="idPNCP" class="form-control" required />
+                        <span asp-validation-for="idPNCP" class="text-danger"></span>
                     </div>
                     <div class="form-group col-3">
                         <label asp-for="anoAta"></label>
-                        <input asp-for="anoAta" class="form-control" />
+                        <input asp-for="anoAta" class="form-control" required />
+                        <span asp-validation-for="anoAta" class="text-danger"></span>
                     </div>
                     <div class="form-group col-3">
                         <label asp-for="numeroAta"></label>
-                        <input asp-for="numeroAta" class="form-control" />
+                        <input asp-for="numeroAta" class="form-control" required />
+                        <span asp-validation-for="numeroAta" class="text-danger"></span>
                     </div>
                 </div>
+
+                <div class="row mb-3">
+                    <div class="form-group col-12">
+                        <label asp-for="codigoUnidade"></label>
+                        <input asp-for="codigoUnidade" class="form-control" placeholder="Digite o código da unidade do órgão (Ex: 12345)" required />
+                        <span asp-validation-for="codigoUnidade" class="text-danger"></span> 
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="form-group col-12">
+                        <label asp-for="PossibilidadeAdesao" class="form-label"></label>
+                        <select asp-for="PossibilidadeAdesao" class="form-control">
+                            <option value="true">Sim (Permite carona)</option>
+                            <option value="false">Não (Ata interna)</option>
+                        </select>
+                        <span asp-validation-for="PossibilidadeAdesao" class="text-danger"></span>
+                    </div>
+                </div>
+
                 <div class="row mb-3">
                     <div class="form-group col-4">
                         <label asp-for="dataAssinatura"></label>
-                        <input asp-for="dataAssinatura" type="date" class="form-control" />
+                        <input asp-for="dataAssinatura" type="date" class="form-control" required />
+                        <span asp-validation-for="dataAssinatura" class="text-danger"></span>
                     </div>
                     <div class="form-group col-4">
                         <label asp-for="dataInicioVigencia"></label>
-                        <input asp-for="dataInicioVigencia" type="date" class="form-control" />
+                        <input asp-for="dataInicioVigencia" type="date" class="form-control" required />
+                        <span asp-validation-for="dataInicioVigencia" class="text-danger"></span>
                     </div>
                     <div class="form-group col-4">
                         <label asp-for="dataFimVigencia"></label>
-                        <input asp-for="dataFimVigencia" type="date" class="form-control" />
+                        <input asp-for="dataFimVigencia" type="date" class="form-control" required />
+                        <span asp-validation-for="dataFimVigencia" class="text-danger"></span>
                     </div>
                 </div>
+
                 <div class="form-group mb-3">
                     <label asp-for="arquivo"></label>
                     <div class="input-group">
-                        <input asp-for="arquivo" type="file" class="form-control" id="inputGroupFile02">
+                        <input asp-for="arquivo" type="file" class="form-control" id="inputGroupFile02" accept="application/pdf" required>
                     </div>
+                    <span asp-validation-for="arquivo" class="text-danger"></span> 
                 </div>
+
                 <button type="submit" class="btn btn-primary">Enviar</button>
             </form>
         </div>
