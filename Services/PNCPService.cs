@@ -3,29 +3,28 @@ using PublicadorARP.Models.ViewModels;
 using PublicadorARP.Services.Interfaces;
 using RestSharp;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Text.Json;
 using WebApp.Models.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using PublicadorDeAtas.Models; // CORREÇÃO: Adicionado para encontrar o AlterarAtaRegistroPrecoDto
+using PublicadorDeAtas.Context; // CORREÇÃO: Traz o banco de dados da SUPEL para o arquivo
 
 namespace PublicadorARP.Services
 {
     public class PNCPService : IPNCPService
     {
-        private readonly RestClient _client;
+        private readonly RestClient _client; // Configura o cliente do RestSharp
+        private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
 
-        public PNCPService(HttpClient httpClient, IConfiguration configuration)
+        // O construtor recebe o HttpClient do .NET (com a URL do governo) e o Contexto da SUPEL
+        public PNCPService(HttpClient httpClient, AppDbContext context, IConfiguration configuration)
         {
+            _client = new RestClient(httpClient);
+            _context = context;
             _configuration = configuration;
-            
-            var options = new RestClientOptions
-            {
-                BaseUrl = new Uri(_configuration["ApiPNCP:Route"] ?? throw new ArgumentNullException("ApiPNCP:Route não configurada."))
-            };
-            _client = new RestClient(httpClient, options);
         }
 
         public async Task<ContratacaoViewModel?> ConsultarContratacao(ConsultarContratacaoDto dto)
@@ -81,11 +80,7 @@ namespace PublicadorARP.Services
             try
             {
                 var contratacao = await ConsultarContratacao(dto);
-                if (contratacao == null)
-                {
-                    Console.WriteLine($"Erro ao unificar consulta: Contratação não encontrada.");
-                    return null;
-                }
+                if (contratacao == null) return null;
 
                 var ataListViewModel = await ConsultarAtasPorContratacao(dto);
                 contratacao.AtasRegistroPrecoList = ataListViewModel;
@@ -129,7 +124,7 @@ namespace PublicadorARP.Services
             {
                 if (dto.arquivo == null)
                 {
-                    throw new ArgumentException("O arquivo digital da Ata é obrigatório para envio ao PNCP.");
+                    throw new ArgumentException("O arquivo digital em PDF é obrigatório.");
                 }
 
                 string pattern = @"(\d{14})-(\d)-(\d{6})/(\d{4})";
@@ -144,20 +139,15 @@ namespace PublicadorARP.Services
                 }
                 else
                 {
-                    throw new FormatException("O ID do PNCP informado não corresponde ao padrão esperado (CNPJ-MODALIDADE-SEQUENCIAL/ANO).");
+                    throw new FormatException("O ID do PNCP informado não corresponde ao padrão esperado.");
                 }
 
                 var request = new RestRequest($"orgaos/{dto.cnpjOrgao}/compras/{dto.anoCompra}/{dto.sequencialCompra}/atas", Method.Post);
 
-                string login = _configuration["AuthPNCP:Login"] ?? throw new InvalidOperationException("Login do PNCP não configurado.");
-                string senha = _configuration["AuthPNCP:Senha"] ?? throw new InvalidOperationException("Senha do PNCP não configurada.");
+                string login = _configuration["AuthPNCP:Login"] ?? throw new InvalidOperationException("Login não configurado.");
+                string senha = _configuration["AuthPNCP:Senha"] ?? throw new InvalidOperationException("Senha não configurada.");
                 
                 var token = await LoginAndGetTokenAsync(login, senha);
-                if (string.IsNullOrEmpty(token))
-                {
-                    throw new WebException("Falha na autenticação preventiva junto ao portal PNCP. Token nulo.");
-                }
-
                 request.AddHeader("Authorization", $"Bearer {token}");
 
                 string nomeArquivo = $"ATA_REGISTRO_PRECO_No_{dto.numeroAta}_{dto.anoAta}";
@@ -168,7 +158,7 @@ namespace PublicadorARP.Services
                 {
                     numeroAtaRegistroPreco = dto.numeroAta,
                     anoAta = Convert.ToInt32(dto.anoAta),
-                    dataAssinatura = DateTime.TryParse(dto.dataAssinatura, out var dtAssinatura) ? dtAssinatura.ToString("yyyy-MM-dd") : dto.dataAssinatura,
+                    dataAssinatura = dto.dataAssinatura,
                     dataVigenciaInicio = dto.dataInicioVigencia.ToString("yyyy-MM-dd"),
                     dataVigenciaFim = dto.dataFimVigencia.ToString("yyyy-MM-dd"),
                     possibilidadeAdesao = dto.PossibilidadeAdesao, 
@@ -180,9 +170,16 @@ namespace PublicadorARP.Services
                     }).ToList()
                 };
 
-                string jsonString = JsonSerializer.Serialize(requestData);
+                var jsonOptions = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    WriteIndented = false
+                };
+
+                string jsonString = JsonSerializer.Serialize(requestData, jsonOptions);
                 
-                request.AddParameter("ata", jsonString, ParameterType.RequestBody);
+                byte[] jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+                request.AddFile("ata", jsonBytes, "ata.json", "application/json");
 
                 var arquivoBytes = ConvertIFormFileToByteArray(dto.arquivo);
                 request.AddFile("documento", arquivoBytes, dto.arquivo.FileName, "application/pdf");
@@ -192,16 +189,18 @@ namespace PublicadorARP.Services
 
                 if (response.IsSuccessful)
                 {
-                    // CORREÇÃO WARNING (Linha 91): Uso de checagem condicional de nulidade protegida
-                    location = response.Headers?.FirstOrDefault(h => h.Name.Equals("Location", StringComparison.OrdinalIgnoreCase))?.Value?.ToString() ?? "";
+                    var locationHeader = response.Headers?.FirstOrDefault(h => h.Name.Equals("Location", StringComparison.OrdinalIgnoreCase));
+                    location = locationHeader?.Value?.ToString() ?? string.Empty;
                     Console.WriteLine($"Ata publicada com sucesso em lote único. Status: {response.StatusCode}");
                 }
-                else
+            else
                 {
-                    Console.WriteLine($"Failed to submit form: {response.StatusCode}");
-                    Console.WriteLine($"Retorno detalhado do PNCP: {response.Content}");
-                }
-                
+                Console.WriteLine($"Falha ao publicar a ata. Status: {response.StatusCode}");
+                Console.WriteLine($"Mensagem de Erro: {response.ErrorMessage ?? "Nenhuma mensagem de erro fornecida"}");
+                Console.WriteLine($"Exceção: {response.ErrorException?.Message ?? "Nenhuma exceção lançada"}");
+                Console.WriteLine($"Conteúdo da Resposta: {response.Content ?? string.Empty}");
+            }
+
                 return (response, location);
             }
             catch (Exception ex)
@@ -211,22 +210,16 @@ namespace PublicadorARP.Services
             }
         }
 
-        public async Task<RestResponse> AlterarAtaRegistroPreco(AlterarAtaRegistroPrecoDto dto)
+        public async Task<RestResponse> AlterarAtaRegistroPreco(PublicadorDeAtas.Models.AlterarAtaRegistroPrecoDto dto)
         {
             try
             {
-                var request = new RestRequest($"orgaos/{dto.cnpjOrgao}/compras/{dto.anoCompra}/" +
-                    $"{dto.sequencialCompra}/atas/{dto.sequencialAta}", Method.Put);
+                var request = new RestRequest($"orgaos/{dto.cnpjOrgao}/compras/{dto.anoCompra}/{dto.sequencialCompra}/atas/{dto.sequencialAta}", Method.Put);
 
-                string login = _configuration["AuthPNCP:Login"] ?? throw new InvalidOperationException("Login do PNCP não configurado.");
-                string senha = _configuration["AuthPNCP:Senha"] ?? throw new InvalidOperationException("Senha do PNCP não configurada.");
+                string login = _configuration["AuthPNCP:Login"] ?? throw new InvalidOperationException("Login não configurado.");
+                string senha = _configuration["AuthPNCP:Senha"] ?? throw new InvalidOperationException("Senha não configurada.");
                 
                 var token = await LoginAndGetTokenAsync(login, senha);
-                if (string.IsNullOrEmpty(token))
-                {
-                    throw new WebException("Falha na autenticação preventiva junto ao portal PNCP. Token nulo.");
-                }
-
                 request.AddHeader("Authorization", $"Bearer {token}");
                 request.AddHeader("Content-Type", "application/json");
 
@@ -234,24 +227,18 @@ namespace PublicadorARP.Services
                 {
                     numeroAta = dto.NumeroAta,
                     anoAta = dto.AnoAta,
-                    dataAssinatura = DateTime.TryParse(dto.DataAssinatura, out var dtAssinatura) ? dtAssinatura.ToString("yyyy-MM-dd") : dto.DataAssinatura,
-                    dataVigenciaInicio = DateTime.TryParse(dto.DataVigenciaInicio, out var dtInicio) ? dtInicio.ToString("yyyy-MM-dd") : dto.DataVigenciaInicio,
-                    dataVigenciaFim = DateTime.TryParse(dto.DataVigenciaFim, out var dtFim) ? dtFim.ToString("yyyy-MM-dd") : dto.DataVigenciaFim,
+                    dataAssinatura = dto.DataAssinatura,
+                    dataVigenciaInicio = dto.DataVigenciaInicio,
+                    dataVigenciaFim = dto.DataVigenciaFim,
                     objeto = dto.Objeto,
                     justificativaAlteracao = dto.JustificativaAlteracao
                 };
 
-                request.AddJsonBody(payloadAlteracao);
+                var jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+                string jsonString = JsonSerializer.Serialize(payloadAlteracao, jsonOptions);
+                request.AddJsonBody(jsonString);
 
                 var response = await _client.ExecuteAsync(request);
-
-                if (!response.IsSuccessful)
-                {
-                    Console.WriteLine($"Failed to alter form: {response.StatusCode}");
-                    // CORREÇÃO WARNING (Linha 198): Fallback para string vazia caso Content venha nulo
-                    Console.WriteLine($"Retorno detalhado do PNCP na alteração: {response.Content ?? string.Empty}");
-                }
-
                 return response;
             }
             catch (Exception ex)
@@ -275,14 +262,17 @@ namespace PublicadorARP.Services
 
                 if (response.IsSuccessful && response.Headers != null)
                 {
-                    var authHeader = response.Headers.FirstOrDefault(h => h.Name.Equals("Authorization", StringComparison.OrdinalIgnoreCase))?.Value?.ToString();
-                    if (!string.IsNullOrEmpty(authHeader))
+                    var authHeader = response.Headers.FirstOrDefault(h => h.Name.Equals("Authorization", StringComparison.OrdinalIgnoreCase));
+                    if (authHeader?.Value != null)
                     {
-                        return authHeader.Replace("Bearer ", "", StringComparison.OrdinalIgnoreCase).Trim();
+                        string tokenStr = authHeader.Value.ToString() ?? string.Empty;
+                        if (tokenStr.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                        {
+                            tokenStr = tokenStr.Substring(7);
+                        }
+                        return tokenStr.Trim();
                     }
                 }
-                
-                Console.WriteLine($"Failed to login: {response.StatusCode}");
                 return null;
             }
             catch (Exception ex)

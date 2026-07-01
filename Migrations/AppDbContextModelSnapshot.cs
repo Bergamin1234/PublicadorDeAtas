@@ -103,10 +103,12 @@ namespace PublicadorDeAtas.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -143,10 +145,12 @@ namespace PublicadorDeAtas.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -236,6 +240,108 @@ namespace PublicadorDeAtas.Migrations
                     b.ToTable("AspNetUsers", "PublicadorARP");
                 });
 
+            modelBuilder.Entity("PublicadorDeAtas.Models.AtaRegistroPreco", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AnoAta")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
+
+                    b.Property<string>("AnoCompra")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
+
+                    b.Property<string>("CnpjOrgao")
+                        .IsRequired()
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
+
+                    b.Property<string>("CodigoUnidade")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime>("DataAssinatura")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataCadastroLocal")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataFimVigencia")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataInicioVigencia")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("IdPncp")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("NumeroAta")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<bool>("PossibilidadeAdesao")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SequencialCompra")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("UsuarioNome")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CnpjOrgao", "AnoCompra", "SequencialCompra")
+                        .HasDatabaseName("IX_AtaRegistroPreco_FiltroPNCP");
+
+                    b.ToTable("AtaRegistroPreco", "PublicadorARP");
+                });
+
+            modelBuilder.Entity("PublicadorDeAtas.Models.ParteEnvolvida", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AtaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Cnpj")
+                        .IsRequired()
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
+
+                    b.Property<string>("CodigoUnidadeCompradora")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("TipoParteEnvolvidaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AtaId");
+
+                    b.ToTable("ParteEnvolvida", "PublicadorARP");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -285,6 +391,22 @@ namespace PublicadorDeAtas.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PublicadorDeAtas.Models.ParteEnvolvida", b =>
+                {
+                    b.HasOne("PublicadorDeAtas.Models.AtaRegistroPreco", "Ata")
+                        .WithMany("PartesEnvolvidas")
+                        .HasForeignKey("AtaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ata");
+                });
+
+            modelBuilder.Entity("PublicadorDeAtas.Models.AtaRegistroPreco", b =>
+                {
+                    b.Navigation("PartesEnvolvidas");
                 });
 #pragma warning restore 612, 618
         }

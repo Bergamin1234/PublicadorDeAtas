@@ -190,7 +190,7 @@
     {
       "code": "NU1902",
       "level": "Warning",
-      "message": "Package 'RestSharp' 110.2.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-4rr6-2v9v-wcpc",
+      "message": "O pacote 'RestSharp' 110.2.0 tem uma moderado vulnerabilidade de gravidade conhecida, https://github.com/advisories/GHSA-4rr6-2v9v-wcpc",
       "projectPath": "C:\\Users\\02555331280\\Downloads\\publicadorpncp-development\\publicadorpncp-development\\PublicadorDeAtas\\PublicadorDeAtas.csproj",
       "warningLevel": 1,
       "filePath": "C:\\Users\\02555331280\\Downloads\\publicadorpncp-development\\publicadorpncp-development\\PublicadorDeAtas\\PublicadorDeAtas.csproj",

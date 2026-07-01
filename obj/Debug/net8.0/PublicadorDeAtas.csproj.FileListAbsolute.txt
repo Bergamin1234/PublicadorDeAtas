@@ -63,6 +63,8 @@ C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-develop
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Debug\net8.0\Mono.TextTemplating.dll
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Debug\net8.0\Npgsql.dll
+C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Debug\net8.0\NuGet.Common.dll
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Debug\net8.0\NuGet.Configuration.dll
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Debug\net8.0\NuGet.DependencyResolver.Core.dll

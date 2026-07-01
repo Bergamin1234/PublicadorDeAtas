@@ -8814,7 +8814,7 @@
       "code": "NU1902",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'RestSharp' 110.2.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-4rr6-2v9v-wcpc",
+      "message": "O pacote 'RestSharp' 110.2.0 tem uma moderado vulnerabilidade de gravidade conhecida, https://github.com/advisories/GHSA-4rr6-2v9v-wcpc",
       "libraryId": "RestSharp",
       "targetGraphs": [
         "net8.0"

@@ -20,7 +20,6 @@ namespace PublicadorDeAtas.Models
         public string UsuarioNome { get; set; } = string.Empty;
         public DateTime DataCadastroLocal { get; set; } = DateTime.UtcNow;
 
-        // Corrigido o namespace interno para localizar a coleção perfeitamente
         public virtual ICollection<ParteEnvolvida> PartesEnvolvidas { get; set; } = new List<ParteEnvolvida>();
     }
 }

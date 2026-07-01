@@ -1,13 +1,3 @@
-C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.csproj.AssemblyReference.cache
-C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\rpswa.dswa.cache.json
-C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.AssemblyInfoInputs.cache
-C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.AssemblyInfo.cs
-C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.csproj.CoreCompileInputs.cache
-C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.RazorAssemblyInfo.cache
-C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.RazorAssemblyInfo.cs
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Release\net8.0\appsettings.Development.json
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Release\net8.0\appsettings.json
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Release\net8.0\PublicadorDeAtas.staticwebassets.runtime.json
@@ -73,6 +63,8 @@ C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-develop
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Release\net8.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Release\net8.0\Mono.TextTemplating.dll
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Release\net8.0\Newtonsoft.Json.dll
+C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Release\net8.0\Npgsql.dll
+C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Release\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Release\net8.0\NuGet.Common.dll
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Release\net8.0\NuGet.Configuration.dll
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Release\net8.0\NuGet.DependencyResolver.Core.dll
@@ -271,6 +263,17 @@ C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-develop
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Release\net8.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Release\net8.0\runtimes\win\lib\net7.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\bin\Release\net8.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
+C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.csproj.AssemblyReference.cache
+C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\rpswa.dswa.cache.json
+C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.AssemblyInfoInputs.cache
+C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.AssemblyInfo.cs
+C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.csproj.CoreCompileInputs.cache
+C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.RazorAssemblyInfo.cache
+C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.RazorAssemblyInfo.cs
+C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.sourcelink.json
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\rjimswa.dswa.cache.json
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\rjsmrazor.dswa.cache.json
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\rjsmcshtml.dswa.cache.json
@@ -288,4 +291,3 @@ C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-develop
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.pdb
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.genruntimeconfig.cache
 C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\ref\PublicadorDeAtas.dll
-C:\Users\02555331280\Downloads\publicadorpncp-development\publicadorpncp-development\PublicadorDeAtas\obj\Release\net8.0\PublicadorDeAtas.sourcelink.json

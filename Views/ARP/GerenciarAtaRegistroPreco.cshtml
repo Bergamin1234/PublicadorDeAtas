@@ -1,47 +1,33 @@
 ﻿@model PublicadorARP.Models.ViewModels.AtaRegistroPrecoViewModel
 
 @{
-    ViewData["Title"] = "Consultar ARPs";
+    ViewData["Title"] = "Detalhes da ARP";
 }
-
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="text-center">
-                <h1 class="display-4">Contratação @Model.NumeroAtaRegistroPreco / @Model.AnoAta</h1>
-                <p>Atas de registro de preço publicadas @Model.NumeroControlePNCP</p>
+            <div class="text-center mb-4">
+                <h1 class="display-4">Ata de Registro de Preço</h1>
+                <p class="lead">Detalhamento dos Dados Publicados</p>
             </div>
-            @* <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Sequencial</th>
-                        <th>Número Ata</th>
-                        <th>Data de Assinatura</th>
-                        <th>Data de Vigência (Início)</th>
-                        <th>Data de Vigência (Fim)</th>
-                        <th>Data de Publicação</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var ata in Model.)
-                    {
-                        <tr>
-                            <td>@ata.SequencialAta</td>
-                            <td>@ata.NumeroAtaRegistroPreco/@ata.AnoAta</td>
-                            <td>@ata.DataAssinatura.ToString("dd/MM/yyyy")</td>
-                            <td>@ata.DataVigenciaInicio.ToString("dd/MM/yyyy")</td>
-                            <td>@ata.DataVigenciaFim.ToString("dd/MM/yyyy")</td>
-                            <td>@ata.DataPublicacaoPncp.ToString("dd/MM/yyyy")</td>
-                            <td>
-                                <a type="button" class="btn btn-info btn-square" asp-area="" asp-controller="ARP" asp-action="GerenciarAtaRegistroPreco"><i class="bi bi-info-circle"></i></a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table> *@
+        
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-bold">
+                    Informações Gerais de Controle
+                </div>
+                <div class="card-body">
+                    <p><strong>Número da Ata:</strong> @Model.NumeroAtaRegistroPreco / @Model.AnoAta</p>
+                    <p><strong>Número de Controle PNCP:</strong> @Model.NumeroControlePNCP</p>
+                    <p><strong>Data de Assinatura:</strong> @Model.DataAssinatura.ToString("dd/MM/yyyy")</p>
+                    <p><strong>Início da Vigência:</strong> @Model.DataVigenciaInicio.ToString("dd/MM/yyyy")</p>
+                    <p><strong>Fim da Vigência:</strong> @Model.DataVigenciaFim.ToString("dd/MM/yyyy")</p>
+                    <p><strong>Data de Publicação no Portal:</strong> @Model.DataPublicacaoPncp.ToString("dd/MM/yyyy")</p>
+                </div>
+                <div class="card-footer bg-light">
+                    <a asp-action="ConsultarAtasPorContratacao" class="btn btn-secondary">Voltar</a>
+                </div>
+            </div>
         </div>
     </div>
-
 </div>

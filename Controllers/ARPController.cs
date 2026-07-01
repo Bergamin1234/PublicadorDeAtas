@@ -1,22 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.Extensions.Configuration;
 using System;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using WebApp.Models.Dtos;
-using System.Collections.Generic;
-using System.IO;
-using Microsoft.AspNetCore.Http;
-using RestSharp;
 using PublicadorARP.Services.Interfaces;
 using PublicadorARP.Models.Dtos;
-using PublicadorARP.Models.ViewModels;
 using System.Text.RegularExpressions;
+using System.Net;
 
 namespace WebApp.Controllers
 {
@@ -41,9 +31,6 @@ namespace WebApp.Controllers
             return View();
         }
 
-        // =========================================================================
-        // MÉTODO REFATORADO CONTRA ERROS DE TELA BRANCA
-        // =========================================================================
         [HttpPost]
         public async Task<IActionResult> InserirAtaRegistroPreco(InserirAtaRegistroPrecoDto dto)
         {
@@ -59,27 +46,54 @@ namespace WebApp.Controllers
                 ModelState.AddModelError("arquivo", "O arquivo PDF da Ata de Registro de Preço é obrigatório.");
             }
 
-            // 4. Valida se existem erros nos campos
+            // 4. Valida se existem erros nos campos básicos do formulário
             if (!ModelState.IsValid)
             {
                 return View(dto); 
             }
 
-            var result = await _pncpService.InserirAtaRegistroPreco(dto);
+            // CORREÇÃO: Bloco de tratamento defensivo para interceptar falhas de negócio e da API
+            try
+            {
+                var result = await _pncpService.InserirAtaRegistroPreco(dto);
 
-            if (result.Item1.IsSuccessful)
-            {
-                var url = result.Item2;
-                url = url.Replace("/compras", "");
-                url = url.Replace("/atas", "");
-                string novaUrl = Regex.Replace(url, @"https://pncp.gov.br/pncp-api/v1/orgaos", "https://pncp.gov.br/app/atas");
-                ViewBag.UrlPNCP = novaUrl;
-                return View("ARPSucess");
+                if (result.Item1.IsSuccessful)
+                {
+                    var url = result.Item2;
+                    if (!string.IsNullOrEmpty(url))
+                    {
+                        url = url.Replace("/compras", "");
+                        url = url.Replace("/atas", "");
+                        string novaUrl = Regex.Replace(url, @"https://pncp.gov.br/pncp-api/v1/orgaos", "https://pncp.gov.br/app/atas");
+                        ViewBag.UrlPNCP = novaUrl;
+                    }
+                    return View("ARPSucess");
+                }
+                else
+                {
+                    // Erro retornado mapeado pela própria API do PNCP (Ex: Fornecedor Inexistente, Item incorreto)
+                    string erroDetalhado = result.Item1.Content ?? "Nenhum conteúdo de erro retornado pela API.";
+                    ModelState.AddModelError(string.Empty, $"Rejeição do PNCP: {erroDetalhado}");
+                    return View(dto);
+                }
             }
-            else
+            catch (FormatException fEx)
             {
-                string erroDetalhado = result.Item1.Content ?? "Nenhum conteúdo de erro retornado pela API.";
-                return Content($"Falha na API do PNCP (Status: {result.Item1.StatusCode}). Detalhes do Erro: {erroDetalhado}");
+                // Captura erros de digitação incorreta do ID PNCP ou conversão de inteiros
+                ModelState.AddModelError(string.Empty, $"Falha de validação dos dados: {fEx.Message}");
+                return View(dto);
+            }
+            catch (WebException wEx)
+            {
+                // Captura falhas de autenticação de Token ou queda do barramento do Governo
+                ModelState.AddModelError(string.Empty, $"Erro de comunicação/autenticação no PNCP: {wEx.Message}");
+                return View(dto);
+            }
+            catch (Exception ex)
+            {
+                // Fallback para qualquer outro tipo de erro de infraestrutura local
+                ModelState.AddModelError(string.Empty, $"Erro interno inesperado: {ex.Message}");
+                return View(dto);
             }
         }
 

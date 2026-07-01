@@ -13,10 +13,10 @@
 
             <form asp-controller="ARP" asp-action="InserirAtaRegistroPreco" method="post" enctype="multipart/form-data">
                 
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <div asp-validation-summary="All" class="text-danger mb-3 alert alert-danger"></div>
 
                 <div class="row mb-3 d-flex flex-wrap">
-                    <div class="form-group col-6">                        
+                    <div class="form-group col-6">                 
                         <label asp-for="idPNCP"></label>
                         <input asp-for="idPNCP" class="form-control" required />
                         <span asp-validation-for="idPNCP" class="text-danger"></span>
@@ -75,37 +75,38 @@
 
                 <div class="card p-3 mb-3 bg-light shadow-sm">
                     <h6 class="card-subtitle mb-2 text-primary fw-bold">Órgão Gerenciador (Ex: SUPEL)</h6>
-                    <input type="hidden" name="PartesEnvolvidas[0].tipoParteEnvolvidaId" value="1" />
+                    <input type="hidden" name="PartesEnvolvidas[0].TipoParteEnvolvidaId" value="1" />
                     <div class="row">
                         <div class="form-group col-6">
                             <label class="form-label font-weight-bold">CNPJ do Gerenciador</label>
-                            <input name="PartesEnvolvidas[0].cnpj" class="form-control" placeholder="Apenas números (Ex: 55972087000150)" required />
+                            <input name="PartesEnvolvidas[0].Cnpj" class="form-control" placeholder="Apenas números (Ex: 55972087000150)" required />
                         </div>
                         <div class="form-group col-6">
                             <label class="form-label font-weight-bold">Código da Unidade Compradora</label>
-                            <input name="PartesEnvolvidas[0].codigoUnidadeCompradora" class="form-control" placeholder="Ex: 0000001" required />
+                            <input name="PartesEnvolvidas[0].CodigoUnidadeCompradora" class="form-control" placeholder="Ex: 0000001" required />
                         </div>
                     </div>
                 </div>
 
                 <div class="card p-3 mb-3 border-secondary shadow-sm">
                     <h6 class="card-subtitle mb-2 text-success fw-bold">Órgão Participante (Ex: SESAU, SEDUC...)</h6>
-                    <input type="hidden" name="PartesEnvolvidas[1].tipoParteEnvolvidaId" value="2" />
+                    <input type="hidden" name="PartesEnvolvidas[1].TipoParteEnvolvidaId" value="2" />
                     <div class="row">
                         <div class="form-group col-6">
                             <label class="form-label font-weight-bold">CNPJ do Participante</label>
-                            <input name="PartesEnvolvidas[1].cnpj" class="form-control" placeholder="Apenas números (Ex: 04008183000140)" required />
+                            <input name="PartesEnvolvidas[1].Cnpj" class="form-control" placeholder="Apenas números (Ex: 04008183000140)" required />
                         </div>
                         <div class="form-group col-6">
                             <label class="form-label font-weight-bold">Código da Unidade Compradora</label>
-                            <input name="PartesEnvolvidas[1].codigoUnidadeCompradora" class="form-control" placeholder="Ex: 0000002" required />
+                            <input name="PartesEnvolvidas[1].CodigoUnidadeCompradora" class="form-control" placeholder="Ex: 0000002" required />
                         </div>
                     </div>
                 </div>
+
                 <div class="form-group mb-3">
                     <label asp-for="arquivo"></label>
                     <div class="input-group">
-                        <input asp-for="arquivo" type="file" class="form-control" id="inputGroupFile02" accept="application/pdf" required>
+                       <input asp-for="arquivo" type="file" class="form-control" id="inputGroupFile02" accept="application/pdf" required>
                     </div>
                     <span asp-validation-for="arquivo" class="text-danger"></span> 
                 </div>

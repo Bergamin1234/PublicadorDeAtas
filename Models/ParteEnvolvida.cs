@@ -1,6 +1,6 @@
 using System;
 
-namespace WebApp.Models
+namespace PublicadorDeAtas.Models
 {
     public class ParteEnvolvida
     {
@@ -10,6 +10,6 @@ namespace WebApp.Models
         public string CodigoUnidadeCompradora { get; set; } = string.Empty;
         
         public int AtaId { get; set; }
-        public AtaRegistroPreco? Ata { get; set; }
+        public virtual AtaRegistroPreco Ata { get; set; } = null!;
     }
 }
