@@ -9,17 +9,17 @@ using System.Text.Json;
 using WebApp.Models.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using PublicadorDeAtas.Context; // CORREÇÃO: Traz o banco de dados da SUPEL para o arquivo
+using PublicadorDeAtas.Context; // Traz o banco de dados da SUPEL para o arquivo
 
 namespace PublicadorARP.Services
 {
     public class PNCPService : IPNCPService
     {
-        private readonly RestClient _client; // Configura o cliente do RestSharp
+        private readonly RestClient _client; // Cliente do RestSharp configurado
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
 
-        // O construtor recebe o HttpClient do .NET (com a URL do governo) e o Contexto da SUPEL
+        // O construtor recebe o HttpClient do .NET (com a URL base do governo) e o Contexto da SUPEL
         public PNCPService(HttpClient httpClient, AppDbContext context, IConfiguration configuration)
         {
             _client = new RestClient(httpClient);
@@ -193,14 +193,15 @@ namespace PublicadorARP.Services
                     location = locationHeader?.Value?.ToString() ?? string.Empty;
                     Console.WriteLine($"Ata publicada com sucesso em lote único. Status: {response.StatusCode}");
                 }
-            else
+                else
                 {
-                Console.WriteLine($"Falha ao publicar a ata. Status: {response.StatusCode}");
-                Console.WriteLine($"Mensagem de Erro: {response.ErrorMessage ?? "Nenhuma mensagem de erro fornecida"}");
-                Console.WriteLine($"Exceção: {response.ErrorException?.Message ?? "Nenhuma exceção lançada"}");
-                Console.WriteLine($"Conteúdo da Resposta: {response.Content ?? string.Empty}");
-            }
-
+                    Console.WriteLine($"Failed to submit form. HTTP Status: {(int)response.StatusCode}");
+                    Console.WriteLine($"Status de Resposta do RestSharp: {response.ResponseStatus}");
+                    Console.WriteLine($"Mensagem de Erro de Rede: {response.ErrorMessage ?? "Nenhuma mensagem de rede"}");
+                    Console.WriteLine($"Exceção de Conexão: {response.ErrorException?.Message ?? "Nenhuma exceção lançada"}");
+                    Console.WriteLine($"Retorno bruto do PNCP: {response.Content ?? string.Empty}");
+                }
+                
                 return (response, location);
             }
             catch (Exception ex)
@@ -273,6 +274,9 @@ namespace PublicadorARP.Services
                         return tokenStr.Trim();
                     }
                 }
+
+                // LOG DE PROTEÇÃO: Registra se a falha de autenticação ocorreu por bloqueio de rede local
+                Console.WriteLine($"Falha na autenticação do PNCP. Código HTTP: {(int)response.StatusCode}. Erro: {response.ErrorMessage ?? "Sem mensagem de rede"}");
                 return null;
             }
             catch (Exception ex)
