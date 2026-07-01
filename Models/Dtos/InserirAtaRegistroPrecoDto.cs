@@ -1,9 +1,18 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebApp.Models.Dtos
 {
+
+    public class ParteEnvolvidaDto
+    {
+        public int TipoParteEnvolvidaId { get; set; } // 1 para Gerenciador, 2 para Participante
+        public string Cnpj { get; set; } = string.Empty;
+        public string CodigoUnidadeCompradora { get; set; } = string.Empty;
+    }
+
     public class InserirAtaRegistroPrecoDto
     {
         [Display(Name = "ID de contratação no PNCP")]
@@ -38,7 +47,7 @@ namespace WebApp.Models.Dtos
         public bool PossibilidadeAdesao { get; set; }
         
         [Display(Name = "Partes Envolvidas")]
-        public object? PartesEnvolvidas { get; set; } 
+        public List<ParteEnvolvidaDto>? PartesEnvolvidas { get; set; } 
         // --------------------------------------------
 
         [Display(Name = "Código da Unidade do Órgão")]

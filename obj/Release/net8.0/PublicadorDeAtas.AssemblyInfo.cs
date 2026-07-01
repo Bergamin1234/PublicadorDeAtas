@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PublicadorDeAtas")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+83e8afb2a4dde55a38c4bd50306a4dc51f227415")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e092dc1bc69db9f71614f3f528b6e6cf4908ff49")]
 [assembly: System.Reflection.AssemblyProductAttribute("PublicadorDeAtas")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PublicadorDeAtas")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

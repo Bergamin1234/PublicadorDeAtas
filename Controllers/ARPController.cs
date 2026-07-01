@@ -42,7 +42,7 @@ namespace WebApp.Controllers
         }
 
         // =========================================================================
-        // MÉTODO REFATORADO E COMPLETAMENTE BLINDADO CONTRA ERROS DE TELA BRANCA
+        // MÉTODO REFATORADO CONTRA ERROS DE TELA BRANCA
         // =========================================================================
         [HttpPost]
         public async Task<IActionResult> InserirAtaRegistroPreco(InserirAtaRegistroPrecoDto dto)
