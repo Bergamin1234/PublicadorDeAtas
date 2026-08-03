@@ -25,25 +25,37 @@ builder.Services.AddHttpClient<IPNCPService, PNCPService>(client =>
     {
         client.BaseAddress = new Uri(route);
     }
+})
+.ConfigurePrimaryHttpMessageHandler(() =>
+{
+    return new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+    };
 });
 
+// 4. Configuração do Identity (Garante que resolva o AppDbContext registrado acima)
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<AppDbContext>();
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
+// Força a tela de diagnóstico detalhada em qualquer ambiente (mata a tela genérica)
+app.UseDeveloperExceptionPage(); 
+
+// Se quiser, pode comentar o bloco antigo para garantir:
+// if (!app.Environment.IsDevelopment())
+// {
+//     app.UseExceptionHandler("/Home/Error");
+//     app.UseHsts();
+// }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
-  app.UseAuthentication();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
@@ -52,3 +64,4 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+

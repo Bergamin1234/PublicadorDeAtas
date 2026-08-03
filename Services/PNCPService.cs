@@ -9,22 +9,24 @@ using System.Text.Json;
 using WebApp.Models.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using PublicadorDeAtas.Context; // Traz o banco de dados da SUPEL para o arquivo
+using PublicadorDeAtas.Context; 
+using Microsoft.Extensions.Logging;
 
 namespace PublicadorARP.Services
 {
     public class PNCPService : IPNCPService
     {
-        private readonly RestClient _client; // Cliente do RestSharp configurado
+        private readonly RestClient _client; 
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<PNCPService> _logger;
 
-        // O construtor recebe o HttpClient do .NET (com a URL base do governo) e o Contexto da SUPEL
-        public PNCPService(HttpClient httpClient, AppDbContext context, IConfiguration configuration)
+        public PNCPService(HttpClient httpClient, AppDbContext context, IConfiguration configuration, ILogger<PNCPService> logger)
         {
             _client = new RestClient(httpClient);
             _context = context;
             _configuration = configuration;
+            _logger = logger;
         }
 
         public async Task<ContratacaoViewModel?> ConsultarContratacao(ConsultarContratacaoDto dto)
@@ -41,12 +43,12 @@ namespace PublicadorARP.Services
                     return response.Data;
                 }
                 
-                Console.WriteLine($"Erro na requisição de consulta de contratação: {response.StatusCode}");
+                _logger.LogWarning($"Erro na requisição de consulta de contratação: {response.StatusCode} - {response.Content}");
                 return null;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro na requisição de consulta de contratação: {ex.Message}");
+                _logger.LogError(ex, $"Erro na requisição de consulta de contratação: {ex.Message}");
                 return null;
             }
         }
@@ -65,12 +67,12 @@ namespace PublicadorARP.Services
                     return response.Data.Data;
                 }
                 
-                Console.WriteLine($"Erro na requisição de consulta de atas: {response.StatusCode}");
+                _logger.LogWarning($"Erro na requisição de consulta de atas: {response.StatusCode} - {response.Content}");
                 return null;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro na requisição de consulta de atas: {ex.Message}");
+                _logger.LogError(ex, $"Erro na requisição de consulta de atas: {ex.Message}");
                 return null;
             }
         }
@@ -89,13 +91,19 @@ namespace PublicadorARP.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro na unificação de consultas: {ex.Message}");
+                _logger.LogError(ex, $"Erro na unificação de consultas: {ex.Message}");
                 return null;
             }
         }
 
         public async Task<AtaRegistroPrecoViewModel?> ConsultarAtaRegistroPreco(ConsultarAtaRegistroPrecoDto dto)
         {
+            if (string.IsNullOrEmpty(dto.anoCompra) || string.IsNullOrEmpty(dto.sequencialCompra) || string.IsNullOrEmpty(dto.sequencialAta))
+            {
+                _logger.LogError("Parâmetros obrigatórios nulos ao disparar requisição ao PNCP.");
+                throw new ArgumentException("Os parâmetros anoCompra, sequencialCompra e sequencialAta são obrigatórios.");
+            }
+
             try
             {
                 string cnpj = !string.IsNullOrEmpty(dto.cnpjOrgao) ? dto.cnpjOrgao : "04801221000110";
@@ -108,13 +116,13 @@ namespace PublicadorARP.Services
                     return response.Data;
                 }
                 
-                Console.WriteLine($"Erro na requisição de consulta detalhada da ata: {response.StatusCode}");
-                return null;
+                _logger.LogError($"API do PNCP retornou erro HTTP: {response.StatusCode} - Conteúdo: {response.Content}");
+                throw new HttpRequestException($"Erro retornado do servidor governamental: {response.StatusCode}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro na requisição de consulta detalhada da ata: {ex.Message}");
-                return null;
+                _logger.LogCritical(ex, $"Exceção disparada em ConsultarAtaRegistroPreco: {ex.Message}");
+                throw; 
             }
         }
 
@@ -191,22 +199,19 @@ namespace PublicadorARP.Services
                 {
                     var locationHeader = response.Headers?.FirstOrDefault(h => h.Name.Equals("Location", StringComparison.OrdinalIgnoreCase));
                     location = locationHeader?.Value?.ToString() ?? string.Empty;
-                    Console.WriteLine($"Ata publicada com sucesso em lote único. Status: {response.StatusCode}");
+                    _logger.LogInformation($"Ata publicada com sucesso. Status: {response.StatusCode}");
                 }
                 else
                 {
-                    Console.WriteLine($"Failed to submit form. HTTP Status: {(int)response.StatusCode}");
-                    Console.WriteLine($"Status de Resposta do RestSharp: {response.ResponseStatus}");
-                    Console.WriteLine($"Mensagem de Erro de Rede: {response.ErrorMessage ?? "Nenhuma mensagem de rede"}");
-                    Console.WriteLine($"Exceção de Conexão: {response.ErrorException?.Message ?? "Nenhuma exceção lançada"}");
-                    Console.WriteLine($"Retorno bruto do PNCP: {response.Content ?? string.Empty}");
+                    _logger.LogError($"Erro ao submeter lote. Status HTTP: {(int)response.StatusCode}");
+                    _logger.LogError($"Resposta bruta do PNCP: {response.Content ?? string.Empty}");
                 }
                 
                 return (response, location);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error submitting form: {ex.Message}");
+                _logger.LogError(ex, $"Erro fatal no envio de dados: {ex.Message}");
                 throw;
             }
         }
@@ -244,7 +249,7 @@ namespace PublicadorARP.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error altering form: {ex.Message}");
+                _logger.LogError(ex, $"Erro ao alterar Ata: {ex.Message}");
                 throw;
             }
         }
@@ -275,13 +280,12 @@ namespace PublicadorARP.Services
                     }
                 }
 
-                // LOG DE PROTEÇÃO: Registra se a falha de autenticação ocorreu por bloqueio de rede local
-                Console.WriteLine($"Falha na autenticação do PNCP. Código HTTP: {(int)response.StatusCode}. Erro: {response.ErrorMessage ?? "Sem mensagem de rede"}");
+                _logger.LogError($"Falha de autenticação no PNCP: {(int)response.StatusCode}.");
                 return null;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error logging in: {ex.Message}");
+                _logger.LogError(ex, $"Erro no método de Login: {ex.Message}");
                 return null;
             }
         }

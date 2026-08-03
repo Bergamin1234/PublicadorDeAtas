@@ -14,6 +14,7 @@ namespace WebApplication1.Controllers
         {
             _logger = logger;
         }
+
         [Authorize]
         public IActionResult Index()
         {
@@ -30,6 +31,8 @@ namespace WebApplication1.Controllers
             return View();
         }
 
+        // Permite que o .NET exiba a tela de erro mesmo se o usuário não estiver logado, quebrando o loop infinito
+        [AllowAnonymous] 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
