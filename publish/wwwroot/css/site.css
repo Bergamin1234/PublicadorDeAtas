@@ -1,0 +1,57 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+/* Estilização para centralizar as opções do menu */
+.navbar-collapse {
+    justify-content: center;
+}
+
+/* Estilização para a cor de fundo */
+.navbar {
+    background-color: #21325e !important;
+}
+
+/* Estilização para a cor do texto das opções do menu */
+.navbar-nav .nav-link {
+    color: #ffffff; /* Cor branca para os links */
+}
+
+/* Estilização para a cor do texto das opções do menu */
+.navbar-nav .nav-link {
+    color: #ffffff; /* Cor branca para os links */
+}
+
+
+.logo-footer {
+    height: 90px;
+    width: 225px;
+}
+
+footer {
+    color: #fff;
+    padding: 2px 0 10px 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: #21325e;
+}
+
+    footer .palacio {
+        width: 150px
+    }

@@ -13,5 +13,9 @@ namespace PublicadorARP.Services.Interfaces
         Task<ContratacaoViewModel?> ConsultarContratacao(ConsultarContratacaoDto dto);
         Task<ContratacaoViewModel?> ConsultarContratacaoComAtasDeRegistroDePreco(ConsultarContratacaoDto dto);
         Task<AtaRegistroPrecoViewModel?> ConsultarAtaRegistroPreco(ConsultarAtaRegistroPrecoDto dto);
+        Task<RestResponse> AlterarAtaRegistroPreco(PublicadorDeAtas.Models.AlterarAtaRegistroPrecoDto dto);
+        
+        // Novo método para retificar a contratação para SRP
+        Task<RestResponse> RetificarContratacaoParaSrp(string cnpjOrgao, string anoCompra, string sequencialCompra, string justificativa = "Tornar a contratação SRP");
     }
 }

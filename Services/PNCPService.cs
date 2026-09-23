@@ -254,6 +254,51 @@ namespace PublicadorARP.Services
             }
         }
 
+        public async Task<RestResponse> RetificarContratacaoParaSrp(string cnpjOrgao, string anoCompra, string sequencialCompra, string justificativa = "Tornar a contratação SRP")
+        {
+            try
+            {
+                string cnpj = !string.IsNullOrEmpty(cnpjOrgao) ? cnpjOrgao : "04801221000110";
+
+                var request = new RestRequest($"orgaos/{cnpj}/compras/{anoCompra}/{sequencialCompra}", Method.Patch);
+
+                string login = _configuration["AuthPNCP:Login"] ?? throw new InvalidOperationException("Login não configurado.");
+                string senha = _configuration["AuthPNCP:Senha"] ?? throw new InvalidOperationException("Senha não configurada.");
+                
+                var token = await LoginAndGetTokenAsync(login, senha);
+                request.AddHeader("Authorization", $"Bearer {token}");
+                request.AddHeader("Content-Type", "application/json");
+
+                var payload = new
+                {
+                    srp = true,
+                    justificativaPresencial = string.IsNullOrWhiteSpace(justificativa) ? "Tornar a contratação SRP" : justificativa
+                };
+
+                var jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+                string jsonString = JsonSerializer.Serialize(payload, jsonOptions);
+                request.AddJsonBody(jsonString);
+
+                var response = await _client.ExecuteAsync(request);
+
+                if (response.IsSuccessful)
+                {
+                    _logger.LogInformation($"Contratação {sequencialCompra}/{anoCompra} retificada para SRP com sucesso.");
+                }
+                else
+                {
+                    _logger.LogWarning($"Erro ao retificar contratação no PNCP: {response.StatusCode} - {response.Content}");
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Exceção ao tentar retificar contratação no PNCP: {ex.Message}");
+                throw;
+            }
+        }
+
         private async Task<string?> LoginAndGetTokenAsync(string login, string senha)
         {
             try

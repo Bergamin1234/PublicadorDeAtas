@@ -148,5 +148,23 @@ namespace WebApp.Controllers
                 return Content($"[Diagnóstico SUPEL] Erro na execução interna: {ex.Message} \n\nDetalhes da StackTrace: {ex.StackTrace}");
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> RetificarContratacaoParaSrp(string cnpjOrgao, string anoCompra, string sequencialCompra, string justificativa = "Tornar a contratação SRP")
+        {
+            if (string.IsNullOrEmpty(anoCompra) || string.IsNullOrEmpty(sequencialCompra))
+            {
+                return BadRequest("Ano e Sequencial da compra são obrigatórios.");
+            }
+
+            var response = await _pncpService.RetificarContratacaoParaSrp(cnpjOrgao, anoCompra, sequencialCompra, justificativa);
+
+            if (response.IsSuccessful)
+            {
+                return Ok(new { mensagem = "Contratação retificada para SRP com sucesso no PNCP.", conteudo = response.Content });
+            }
+
+            return StatusCode((int)response.StatusCode, new { erro = "Falha ao retificar a contratação no PNCP.", conteudo = response.Content });
+        }
     }
 }
